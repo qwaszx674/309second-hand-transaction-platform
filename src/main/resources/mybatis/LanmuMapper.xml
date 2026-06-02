@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.daowen.mapper.LanmuMapper">
+
+    <insert id="insert" parameterType="com.daowen.entity.Lanmu" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO lanmu (name, imgurl, parentid, description, sort)
+        VALUES (#{name}, #{imgurl}, #{parentid}, #{description}, #{sort})
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="com.daowen.entity.Lanmu">
+        UPDATE lanmu SET
+            name = #{name},
+            imgurl = #{imgurl},
+            parentid = #{parentid},
+            description = #{description},
+            sort = #{sort}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="int">
+        DELETE FROM lanmu WHERE id = #{id}
+    </delete>
+
+    <select id="selectByPrimaryKey" parameterType="int" resultType="com.daowen.entity.Lanmu">
+        SELECT * FROM lanmu WHERE id = #{id}
+    </select>
+
+    <select id="load" parameterType="string" resultType="com.daowen.entity.Lanmu">
+        SELECT * FROM lanmu WHERE ${value} LIMIT 1
+    </select>
+
+    <delete id="delete" parameterType="string">
+        DELETE FROM lanmu WHERE ${value}
+    </delete>
+
+    <select id="getEntity" parameterType="string" resultType="com.daowen.entity.Lanmu">
+        SELECT * FROM lanmu WHERE ${value}
+    </select>
+
+    <select id="query" parameterType="map" resultType="com.daowen.entity.Lanmu">
+        SELECT * FROM lanmu
+        <where>
+            <if test="where != null">
+                ${where}
+            </if>
+        </where>
+    </select>
+
+    <select id="count" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM lanmu
+        <where>
+            <if test="where != null">
+                ${where}
+            </if>
+        </where>
+    </select>
+
+    <select id="find" parameterType="map" resultType="com.daowen.entity.Lanmu">
+        SELECT * FROM lanmu
+        <where>
+            <if test="parentid != null">
+                AND parentid = #{parentid}
+            </if>
+        </where>
+        ORDER BY sort ASC
+    </select>
+
+    <select id="selectAll" resultType="com.daowen.entity.Lanmu">
+        SELECT * FROM lanmu ORDER BY sort ASC
+    </select>
+
+    <update id="executeUpdate" parameterType="string">
+        ${value}
+    </update>
+
+    <select id="getRecordCount" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM lanmu WHERE ${value}
+    </select>
+
+      <resultMap id="rmLanmu" type="com.daowen.vo.LanmuVo">
+          <id column="id" property="id"></id>
+          <result column="name" property="name"></result>
+          <result column="bannerurl" property="bannerurl"></result>
+          <result column="type" property="type"></result>
+          <collection property="subtypes" ofType="com.daowen.entity.Subtype" column="id">
+              <id property="id" column="subtypeid"></id>
+              <result property="parentid" column="id"></result>
+              <result property="name" column="subtypename"></result>
+          </collection>
+
+
+      </resultMap>
+
+      <select id="getEntityPlus"   resultMap="rmLanmu"  parameterType="map">
+
+                select l.* ,s.name as subtypename,
+                 s.id as subtypeid
+
+                 from lanmu l
+                 left  join subtype s on  s.parentid=l.id
+
+                 where 1=1
+
+                    <if test="name!=null">
+                        and l.name like '%${name}%'
+                    </if>
+                    <if test="type!=null">
+                        and l.type=#{type}
+                    </if>
+                    <if test="id!=null">
+                        and l.id=#{id}
+                    </if>
+                    <if test="order!=null">
+                        #{order}
+                    </if>
+
+
+      </select>
+      
+     <select id="loadPlus"   resultMap="rmLanmu"  parameterType="map">
+         select l.* ,s.name as subtypename,
+         s.id as subtypeid
+
+         from lanmu l
+         left  join subtype s on  s.parentid=l.id
+
+         where 1=1
+             <if test="id!=null">
+                 and l.id=#{id}
+             </if>
+
+      </select>
+      
+
+
+</mapper>
+
+
