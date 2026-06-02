@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.daowen.mapper.ShangpinMapper">
+
+    <insert id="insert" parameterType="com.daowen.entity.Shangpin" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO shangpin (name, jiage, hyjia, tupian, jieshao, pubtime, kucun, danwei, state, subtitle, typeid, tagid, subtypeid, spstate, pubren, couponid, chandi, clickcount, tuijian)
+        VALUES (#{name}, #{jiage}, #{hyjia}, #{tupian}, #{jieshao}, #{pubtime}, #{kucun}, #{danwei}, #{state}, #{subtitle}, #{typeid}, #{tagid}, #{subtypeid}, #{spstate}, #{pubren}, #{couponid}, #{chandi}, #{clickcount}, #{tuijian})
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="com.daowen.entity.Shangpin">
+        UPDATE shangpin SET
+        name = #{name}, jiage = #{jiage}, hyjia = #{hyjia}, tupian = #{tupian}, jieshao = #{jieshao}, pubtime = #{pubtime}, kucun = #{kucun}, danwei = #{danwei}, state = #{state}, subtitle = #{subtitle}, typeid = #{typeid}, tagid = #{tagid}, subtypeid = #{subtypeid}, spstate = #{spstate}, pubren = #{pubren}, couponid = #{couponid}, chandi = #{chandi}, clickcount = #{clickcount}, tuijian = #{tuijian}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="int">
+        DELETE FROM shangpin WHERE id = #{id}
+    </delete>
+
+    <select id="selectByPrimaryKey" parameterType="int" resultType="com.daowen.entity.Shangpin">
+        SELECT * FROM shangpin WHERE id = #{id}
+    </select>
+
+    <select id="load" parameterType="string" resultType="com.daowen.entity.Shangpin">
+        SELECT * FROM shangpin WHERE ${value} LIMIT 1
+    </select>
+
+    <delete id="delete" parameterType="string">
+        DELETE FROM shangpin WHERE ${value}
+    </delete>
+
+    <select id="getEntity" parameterType="string" resultType="com.daowen.entity.Shangpin">
+        SELECT * FROM shangpin WHERE ${value}
+    </select>
+
+    <select id="query" parameterType="map" resultType="com.daowen.entity.Shangpin">
+        SELECT * FROM shangpin
+        <where>
+            <if test="where != null">
+                ${where}
+            </if>
+        </where>
+    </select>
+
+    <select id="count" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM shangpin
+        <where>
+            <if test="where != null">
+                ${where}
+            </if>
+        </where>
+    </select>
+
+    <select id="find" parameterType="map" resultType="com.daowen.entity.Shangpin">
+        SELECT * FROM shangpin ORDER BY id DESC
+    </select>
+
+    <select id="selectAll" resultType="com.daowen.entity.Shangpin">
+        SELECT * FROM shangpin ORDER BY id DESC
+    </select>
+
+    <update id="executeUpdate" parameterType="string">
+        ${value}
+    </update>
+
+    <select id="getRecordCount" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM shangpin WHERE ${value}
+    </select>
+
+    <resultMap id="rmShangpin" type="com.daowen.vo.ShangpinVo">
+        <id column="id" property="id"></id>
+        <result column="name" property="name" ></result>
+        <result column="subtitle" property="subtitle" ></result>
+        <result column="typeid" property="typeid" ></result>
+        <result column="subtypeid" property="subtypeid" ></result>
+        <result column="tagid" property="tagid" ></result>
+        <result column="jiage" property="jiage" ></result>
+        <result column="hyjia" property="hyjia" ></result>
+        <result column="tupian" property="tupian" ></result>
+        <result column="pubtime" property="pubtime" ></result>
+        <result column="pubren" property="pubren" ></result>
+        <result column="state" property="state" ></result>
+        <result column="kucun" property="kucun" ></result>
+        <result column="danwei" property="danwei" ></result>
+        <result column="jieshao" property="jieshao" ></result>
+        <result column="typename" property="typename" ></result>
+        <result column="subtypename" property="subtypename" ></result>
+        <result column="tagname" property="tagname" ></result>
+        <result column="chandi" property="chandi" ></result>
+        <result column="couponid" property="couponid" ></result>
+
+    </resultMap>
+    <select id="getEntityPlus"  resultMap="rmShangpin"   >
+
+               select sp.*, lm.name as typename,
+               st.name as subtypename,
+               t.name as tagname
+                from shangpin sp
+                left join lanmu lm
+                on lm.id=sp.typeid
+                left join stag t
+               on t.id=sp.tagid
+
+               left join  subtype st
+               on   st.id=sp.subtypeid
+
+               where 1=1
+               <if test="spname!=null">
+                  and sp.name like '%${spname}%'
+               </if>
+                <if test="pubren!=null">
+                    and sp.pubren=#{pubren}
+                </if>
+
+                <if test="state!=null ">
+                     and sp.state=#{state}
+                </if>
+                <if test="spstate!=null ">
+                    and sp.spstate=#{spstate}
+                </if>
+                <if test="tagid!=null ">
+                    and sp.tagid=#{tagid}
+                </if>
+                <if test="hot!=null ">
+                    and sp.hot=#{hot}
+                </if>
+                <if test="typeid!=null ">
+                    and sp.typeid=#{typeid}
+                </if>
+                <if test="chandi!=null ">
+                    and sp.chandi=#{chandi}
+                </if>
+                <if test="subtypeid!=null ">
+                    and sp.subtypeid=#{subtypeid}
+                </if>
+                <if test="ids!=null">
+                    and sp.id in
+                     <foreach item="id" collection="ids" separator="," open="(" close=")" index="">
+                        #{id}
+                     </foreach>
+                </if>
+                <if test="order!=null ">
+                    ${order}
+                </if>
+
+                <if test="topcount!=null ">
+                    limit #{topcount}
+                </if>
+
+
+
+    </select>
+
+    <select id="loadPlus"  resultMap="rmShangpin"   >
+
+        select sp.*, lm.name as typename,
+        st.name as subtypename,
+        t.name as tagname
+        from shangpin sp
+        left join lanmu lm
+        on lm.id=sp.typeid
+        left join stag t
+        on t.id=sp.tagid
+
+        left join  subtype st
+        on   st.id=sp.subtypeid
+
+         where 1=1
+        <if test="id!=null">
+            and sp.id =#{id}
+        </if>
+
+
+
+    </select>
+
+    <select id="getRecomment" parameterType="map" resultMap="rmShangpin" >
+
+
+       select sp.*, lm.name as typename,
+        st.name as subtypename,
+        t.name as tagname
+        from shangpin sp
+        left join lanmu lm
+        on lm.id=sp.typeid
+        left join stag t
+        on t.id=sp.tagid
+
+        left join  subtype st
+        on   st.id=sp.subtypeid
+
+         where 1=1
+
+        <if test="tagids!=null">
+            and sp.tagid in
+            <foreach item="tagid" collection="tagids" separator="," open="(" close=")" index="">
+                #{tagid}
+            </foreach>
+        </if>
+        <if test="top!=null">
+            limit ${top}
+        </if>
+
+
+    </select>
+
+
+
+
+
+</mapper>
