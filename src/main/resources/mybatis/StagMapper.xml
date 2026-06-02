@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.daowen.mapper.StagMapper">
+
+    <insert id="insert" parameterType="com.daowen.entity.Stag" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO stag (name, description, sort)
+        VALUES (#{name}, #{description}, #{sort})
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="com.daowen.entity.Stag">
+        UPDATE stag SET
+            name = #{name},
+            description = #{description},
+            sort = #{sort}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="int">
+        DELETE FROM stag WHERE id = #{id}
+    </delete>
+
+    <select id="selectByPrimaryKey" parameterType="int" resultType="com.daowen.entity.Stag">
+        SELECT * FROM stag WHERE id = #{id}
+    </select>
+
+    <select id="load" parameterType="string" resultType="com.daowen.entity.Stag">
+        SELECT * FROM stag WHERE ${value} LIMIT 1
+    </select>
+
+    <delete id="delete" parameterType="string">
+        DELETE FROM stag WHERE ${value}
+    </delete>
+
+    <select id="getEntity" parameterType="string" resultType="com.daowen.entity.Stag">
+        SELECT * FROM stag WHERE ${value}
+    </select>
+
+    <select id="query" parameterType="map" resultType="com.daowen.entity.Stag">
+        SELECT * FROM stag
+        <where>
+            <if test="where != null">
+                ${where}
+            </if>
+        </where>
+    </select>
+
+    <select id="count" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM stag
+        <where>
+            <if test="where != null">
+                ${where}
+            </if>
+        </where>
+    </select>
+
+    <select id="find" parameterType="map" resultType="com.daowen.entity.Stag">
+        SELECT * FROM stag ORDER BY sort ASC
+    </select>
+
+    <select id="selectAll" resultType="com.daowen.entity.Stag">
+        SELECT * FROM stag ORDER BY sort ASC
+    </select>
+
+    <update id="executeUpdate" parameterType="string">
+        ${value}
+    </update>
+
+    <select id="getRecordCount" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM stag WHERE ${value}
+    </select>
+
+      <select id="getEntityPlus"   resultType="stag"  parameterType="map">
+                 select  * from  stag
+                   where 1=1
+                   <if test="name!=null">
+                       and name like '%${name}%'
+                   </if>
+
+
+      </select>
+      
+     <select id="loadPlus"   resultType="stag"  parameterType="map">
+                 select  * from  stag
+                  where 1=1
+                   <if test="id!=null">
+                       and id=#{id}
+                   </if>
+
+      </select>
+      
+
+
+</mapper>
+
+
